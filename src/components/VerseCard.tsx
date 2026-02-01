@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { ShareButtons } from "./ShareButtons";
+import { VerseImageGenerator } from "./VerseImageGenerator";
 import { BookOpen, Heart } from "lucide-react";
 
 interface VerseCardProps {
@@ -86,8 +87,9 @@ export function VerseCard({
 
       {/* Share Buttons */}
       {showShare && (
-        <div className="pt-4 border-t border-border">
+        <div className="pt-4 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <ShareButtons verseReference={verseReference} verseText={verseText} />
+          <VerseImageGenerator verseText={verseText} verseReference={verseReference} />
         </div>
       )}
     </article>
