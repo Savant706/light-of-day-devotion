@@ -1,11 +1,23 @@
 import { Layout } from "@/components/layout/Layout";
 import { VerseCard } from "@/components/VerseCard";
 import { useTodayVerse } from "@/hooks/useVerses";
-import { Sun, BookOpen } from "lucide-react";
+import { Sun } from "lucide-react";
 import { Link } from "react-router-dom";
+
+// Fallback verse when no daily verse is available
+const FALLBACK_VERSE = {
+  date: new Date().toISOString().split("T")[0],
+  verse_reference: "Psalm 119:105",
+  verse_text: "Your word is a lamp for my feet, a light on my path.",
+  devotional: "God's Word illuminates our journey through life. When we feel lost or uncertain, Scripture provides the guidance we need. Like a lamp in the darkness, it reveals the next step we should take, bringing clarity to our decisions and peace to our hearts. Today, let His Word light your way.",
+  prayer: "Lord, thank You for Your Word that guides my steps. Help me to seek Your wisdom daily and trust in Your light to lead me through every situation. Amen.",
+};
 
 const Index = () => {
   const { data: verse, isLoading, error } = useTodayVerse();
+
+  // Use fallback verse if no data or error
+  const displayVerse = verse || (!isLoading ? FALLBACK_VERSE : null);
 
   return (
     <Layout>
@@ -34,33 +46,16 @@ const Index = () => {
             <div className="h-32 bg-muted rounded mb-4" />
             <div className="h-24 bg-muted/50 rounded" />
           </div>
-        ) : error ? (
-          <div className="verse-card text-center">
-            <p className="text-destructive">Unable to load today's verse. Please try again later.</p>
-          </div>
-        ) : verse ? (
+        ) : displayVerse ? (
           <VerseCard
-            date={verse.date}
-            verseReference={verse.verse_reference}
-            verseText={verse.verse_text}
-            devotional={verse.devotional}
-            prayer={verse.prayer}
+            date={displayVerse.date}
+            verseReference={displayVerse.verse_reference}
+            verseText={displayVerse.verse_text}
+            devotional={displayVerse.devotional}
+            prayer={displayVerse.prayer}
+            isFallback={!verse}
           />
-        ) : (
-          <div className="verse-card text-center py-12">
-            <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="font-serif text-2xl text-foreground mb-2">No verse for today yet</h2>
-            <p className="text-muted-foreground mb-6">
-              Check back later or browse our archive of previous devotionals.
-            </p>
-            <Link
-              to="/archive"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-colors"
-            >
-              Browse Archive
-            </Link>
-          </div>
-        )}
+        ) : null}
       </section>
 
       {/* Call to Action Section */}

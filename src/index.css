@@ -174,13 +174,42 @@
 @layer components {
   /* Verse card styling */
   .verse-card {
-    @apply relative bg-card rounded-2xl p-8 shadow-sm border border-border/50;
+    @apply relative bg-card rounded-2xl p-8 md:p-10 shadow-sm border border-border/50;
     background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--cream-dark) / 0.5) 100%);
+  }
+
+  /* Featured verse highlight container */
+  .verse-highlight {
+    @apply bg-secondary/30 rounded-2xl py-8 px-6 md:py-10 md:px-8 border border-primary/10;
+  }
+
+  .dark .verse-highlight {
+    @apply bg-secondary/50 border-primary/20;
+  }
+
+  /* Featured verse text - Large, prominent, readable */
+  .verse-text-featured {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-serif italic leading-relaxed text-foreground;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+
+  /* Verse reference styling */
+  .verse-reference {
+    @apply inline-block px-4 py-2 bg-primary/10 text-primary font-medium text-base md:text-lg rounded-full;
+  }
+
+  .dark .verse-reference {
+    @apply bg-primary/20 text-primary-foreground;
   }
 
   /* Hero section styling */
   .hero-gradient {
     background: linear-gradient(180deg, hsl(var(--sky-light)) 0%, hsl(var(--background)) 100%);
+  }
+
+  .dark .hero-gradient {
+    background: linear-gradient(180deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
   }
 
   /* Gold accent decorations */
