@@ -12,6 +12,7 @@ interface VerseCardProps {
   showShare?: boolean;
   compact?: boolean;
   isFallback?: boolean;
+  isOffline?: boolean;
 }
 
 export function VerseCard({
@@ -23,6 +24,7 @@ export function VerseCard({
   showShare = true,
   compact = false,
   isFallback = false,
+  isOffline = false,
 }: VerseCardProps) {
   const formattedDate = format(new Date(date), "EEEE, MMMM d, yyyy");
 
@@ -52,10 +54,10 @@ export function VerseCard({
         <time className="text-sm uppercase tracking-widest text-muted-foreground" dateTime={date}>
           {formattedDate}
         </time>
-        {isFallback && (
+        {(isFallback || isOffline) && (
           <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-accent/10 text-accent text-xs rounded-full">
             <Sparkles className="h-3 w-3" />
-            <span>Daily Inspiration</span>
+            <span>{isOffline ? "Saved Devotional" : "Daily Inspiration"}</span>
           </div>
         )}
       </div>

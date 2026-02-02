@@ -1,26 +1,24 @@
 import { Layout } from "@/components/layout/Layout";
 import { VerseCard } from "@/components/VerseCard";
-import { useTodayVerse } from "@/hooks/useVerses";
-import { Sun } from "lucide-react";
+import { useOfflineVerse } from "@/hooks/useOfflineVerse";
+import { Sun, WifiOff } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Fallback verse when no daily verse is available
-const FALLBACK_VERSE = {
-  date: new Date().toISOString().split("T")[0],
-  verse_reference: "Psalm 119:105",
-  verse_text: "Your word is a lamp for my feet, a light on my path.",
-  devotional: "God's Word illuminates our journey through life. When we feel lost or uncertain, Scripture provides the guidance we need. Like a lamp in the darkness, it reveals the next step we should take, bringing clarity to our decisions and peace to our hearts. Today, let His Word light your way.",
-  prayer: "Lord, thank You for Your Word that guides my steps. Help me to seek Your wisdom daily and trust in Your light to lead me through every situation. Amen.",
-};
-
 const Index = () => {
-  const { data: verse, isLoading, error } = useTodayVerse();
-
-  // Use fallback verse if no data or error
-  const displayVerse = verse || (!isLoading ? FALLBACK_VERSE : null);
+  const { verse, isLoading, isOnline, isOfflineMode } = useOfflineVerse();
 
   return (
     <Layout>
+      {/* Offline indicator */}
+      {!isOnline && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2">
+          <div className="max-w-4xl mx-auto flex items-center justify-center gap-2 text-sm text-amber-700 dark:text-amber-400">
+            <WifiOff className="h-4 w-4" />
+            <span>You're offline — viewing saved devotional</span>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="hero-gradient py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -46,14 +44,14 @@ const Index = () => {
             <div className="h-32 bg-muted rounded mb-4" />
             <div className="h-24 bg-muted/50 rounded" />
           </div>
-        ) : displayVerse ? (
+        ) : verse ? (
           <VerseCard
-            date={displayVerse.date}
-            verseReference={displayVerse.verse_reference}
-            verseText={displayVerse.verse_text}
-            devotional={displayVerse.devotional}
-            prayer={displayVerse.prayer}
-            isFallback={!verse}
+            date={verse.date}
+            verseReference={verse.verse_reference}
+            verseText={verse.verse_text}
+            devotional={verse.devotional}
+            prayer={verse.prayer}
+            isOffline={isOfflineMode}
           />
         ) : null}
       </section>
