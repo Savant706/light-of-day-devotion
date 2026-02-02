@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { ShareButtons } from "./ShareButtons";
 import { VerseImageGenerator } from "./VerseImageGenerator";
-import { BookOpen, Heart } from "lucide-react";
+import { BookOpen, Heart, Sparkles } from "lucide-react";
 
 interface VerseCardProps {
   date: string;
@@ -11,6 +11,7 @@ interface VerseCardProps {
   prayer: string;
   showShare?: boolean;
   compact?: boolean;
+  isFallback?: boolean;
 }
 
 export function VerseCard({
@@ -21,6 +22,7 @@ export function VerseCard({
   prayer,
   showShare = true,
   compact = false,
+  isFallback = false,
 }: VerseCardProps) {
   const formattedDate = format(new Date(date), "EEEE, MMMM d, yyyy");
 
@@ -46,27 +48,44 @@ export function VerseCard({
   return (
     <article className="verse-card">
       {/* Date */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <time className="text-sm uppercase tracking-widest text-muted-foreground" dateTime={date}>
           {formattedDate}
         </time>
+        {isFallback && (
+          <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-accent/10 text-accent text-xs rounded-full">
+            <Sparkles className="h-3 w-3" />
+            <span>Daily Inspiration</span>
+          </div>
+        )}
       </div>
 
-      {/* Scripture */}
-      <div className="mb-8">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <BookOpen className="h-5 w-5 text-accent" />
-          <h2 className="text-lg font-medium text-accent">{verseReference}</h2>
+      {/* Featured Scripture - Prominent Display */}
+      <div className="verse-highlight mb-8">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <BookOpen className="h-6 w-6 text-primary" />
+          <span className="text-sm font-medium uppercase tracking-wider text-primary">
+            Today's Scripture
+          </span>
         </div>
-        <blockquote className="scripture-text text-center">
+        
+        {/* Main Verse Text - Large & Prominent */}
+        <blockquote className="verse-text-featured text-center px-4 md:px-8">
           "{verseText}"
         </blockquote>
+        
+        {/* Verse Reference - Below the text */}
+        <div className="text-center mt-6">
+          <span className="verse-reference">
+            — {verseReference}
+          </span>
+        </div>
       </div>
 
       {/* Divider */}
       <div className="flex items-center gap-4 my-8">
         <div className="flex-1 h-px bg-border" />
-        <span className="text-accent text-xl">✦</span>
+        <span className="text-primary text-xl">✦</span>
         <div className="flex-1 h-px bg-border" />
       </div>
 
