@@ -37,19 +37,24 @@ Deno.serve(async (req) => {
     const prompt = `You are a Christian devotional writer. Generate a daily devotional entry with the following components:
 
 1. A Bible verse reference (e.g., "John 3:16", "Psalm 23:1-3")
-2. The actual verse text from that reference (use accurate biblical text)
+2. The actual verse text from that reference - MUST be from the King James Version (KJV) Bible exactly as written
 3. A devotional reflection (2-3 paragraphs, around 150-200 words) explaining the verse's meaning and application for daily life
 4. A short prayer (2-3 sentences) related to the verse
+
+IMPORTANT REQUIREMENTS:
+- Use ONLY King James Version (KJV) text for the verse
+- Choose from a DIFFERENT book of the Bible each day - rotate through: Genesis, Exodus, Psalms, Proverbs, Isaiah, Jeremiah, Matthew, Mark, Luke, John, Romans, 1 Corinthians, 2 Corinthians, Galatians, Ephesians, Philippians, Colossians, 1 Thessalonians, Hebrews, James, 1 Peter, 1 John, Revelation
+- Do NOT repeat books used recently
 
 Respond in JSON format exactly like this:
 {
   "verse_reference": "Book Chapter:Verse",
-  "verse_text": "The actual Bible verse text",
+  "verse_text": "The exact KJV Bible verse text",
   "devotional": "The devotional reflection text",
   "prayer": "The prayer text"
 }
 
-Choose a meaningful verse that offers encouragement, wisdom, or spiritual guidance. Vary the books of the Bible - don't always pick from the same book.`;
+Choose a meaningful verse that offers encouragement, wisdom, or spiritual guidance.`;
 
     const aiResponse = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
