@@ -21,7 +21,7 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-interface CommandDialogProps extends DialogProps {}
+type CommandDialogProps = Omit<DialogProps, "open" |"onOpenChange"> & { children?: React.ReactNode };
 
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (

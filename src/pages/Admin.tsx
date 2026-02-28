@@ -213,8 +213,9 @@ const AdminDashboard = () => {
       await createVerse.mutateAsync(data);
       toast.success("Verse created successfully");
       setShowForm(false);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create verse");
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to create verse");
     }
   };
 
@@ -224,8 +225,9 @@ const AdminDashboard = () => {
       await updateVerse.mutateAsync({ id: editingVerse.id, ...data });
       toast.success("Verse updated successfully");
       setEditingVerse(null);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update verse");
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to update verse");
     }
   };
 
@@ -234,8 +236,9 @@ const AdminDashboard = () => {
     try {
       await deleteVerse.mutateAsync(id);
       toast.success("Verse deleted successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete verse");
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to delete verse");
     }
   };
 
