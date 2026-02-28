@@ -60,7 +60,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="font-medium text-foreground text-sm">Email Us</p>
-                    <p className="text-muted-foreground text-sm">hello@lightofday.app</p>
+                    <p className="text-muted-foreground text-sm">nkinzingabodansavant@gmail.com</p>
                   </div>
                 </div>
 
