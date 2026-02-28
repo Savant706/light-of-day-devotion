@@ -1,11 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Daily Light - Christian Devotional Design System
-   Calm, serene aesthetic with soft colors inspired by morning light
-*/
-
+/* ── Font Imports (must come before @tailwind directives) ── */
 @import "@fontsource/playfair-display/400.css";
 @import "@fontsource/playfair-display/500.css";
 @import "@fontsource/playfair-display/600.css";
@@ -13,14 +6,14 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light of Day Devotion — Design System
+   Warm, serene aesthetic inspired by morning light
+*/
 
 @layer base {
   :root {
@@ -35,8 +28,8 @@
     --popover: 0 0% 89%;
     --popover-foreground: 0 0% 9%;
 
-    /* Primary - Soft sky blue */
-    --primary: 20 90% 48%;
+    /* Primary - Warm amber */
+    --primary: 38 92% 50%;
     --primary-foreground: 33 100% 96%;
 
     /* Secondary - Warm beige */
@@ -56,7 +49,7 @@
 
     --border: 0 0% 83%;
     --input: 0 0% 83%;
-    --ring: 20 90% 48%;
+    --ring: 38 92% 50%;
 
     --radius: 0.75rem;
 
@@ -68,34 +61,16 @@
     --cream: 40 33% 98%;
     --cream-dark: 35 30% 92%;
 
-    /* Sidebar - warm tones */
+    /* Sidebar */
     --sidebar-background: 35 30% 96%;
     --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 20 90% 48%;
+    --sidebar-primary: 38 92% 50%;
     --sidebar-primary-foreground: 33 100% 96%;
     --sidebar-accent: 0 0% 32%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 83%;
-    --sidebar-ring: 20 90% 48%;
-    --chart-1: 27 95% 60%;
-    --chart-2: 43 96% 56%;
-    --chart-3: 47 95% 53%;
-    --chart-4: 24 94% 53%;
-    --chart-5: 0 0% 45%;
+    --sidebar-ring: 38 92% 50%;
     --sidebar: 0 0% 98%;
-    --font-sans: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    --font-serif: 'Libre Caslon Text', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-    --tracking-normal: 0em;
-    --spacing: 0.25rem;
   }
 
   .dark {
@@ -108,14 +83,14 @@
     --popover: 0 0% 25%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 27 95% 60%;
+    --primary: 38 92% 55%;
     --primary-foreground: 12 81% 14%;
 
-    --secondary: 0 0% 45%;
+    --secondary: 0 0% 20%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 45%;
-    --muted-foreground: 0 0% 98%;
+    --muted-foreground: 0 0% 75%;
 
     --accent: 20 91% 14%;
     --accent-foreground: 43 96% 56%;
@@ -123,33 +98,19 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 85% 97%;
 
-    --border: 0 0% 32%;
-    --input: 0 0% 32%;
-    --ring: 27 95% 60%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 38 92% 55%;
 
     --sidebar-background: 25 18% 12%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 27 95% 60%;
+    --sidebar-primary: 38 92% 55%;
     --sidebar-primary-foreground: 12 81% 14%;
     --sidebar-accent: 43 96% 56%;
     --sidebar-accent-foreground: 20 91% 14%;
-    --sidebar-border: 0 0% 32%;
-    --sidebar-ring: 27 95% 60%;
-    --chart-1: 30 97% 72%;
-    --chart-2: 45 96% 64%;
-    --chart-3: 48 96% 76%;
-    --chart-4: 27 95% 60%;
-    --chart-5: 0 0% 45%;
+    --sidebar-border: 0 0% 25%;
+    --sidebar-ring: 38 92% 55%;
     --sidebar: 0 0% 14%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-    --radius: 0rem;
   }
 }
 
@@ -177,65 +138,35 @@
   }
 }
 
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-white/60 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-3xl shadow-xl;
+  }
+
   /* Verse card styling */
   .verse-card {
     @apply relative bg-card rounded-2xl p-8 md:p-10 shadow-sm border border-border/50;
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--cream-dark) / 0.5) 100%);
   }
 
-  /* Featured verse highlight container */
-  .verse-highlight {
-    @apply bg-secondary/30 rounded-2xl py-8 px-6 md:py-10 md:px-8 border border-primary/10;
-  }
-
-  .dark .verse-highlight {
-    @apply bg-secondary/50 border-primary/20;
-  }
-
-  /* Featured verse text - Large, prominent, readable */
-  .verse-text-featured {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-serif italic leading-relaxed text-foreground;
-    line-height: 1.5;
-    letter-spacing: 0.01em;
-  }
-
-  /* Verse reference styling */
-  .verse-reference {
-    @apply inline-block px-4 py-2 bg-primary/10 text-primary font-medium text-base md:text-lg rounded-full;
-  }
-
-  .dark .verse-reference {
-    @apply bg-primary/20 text-primary-foreground;
-  }
-
-  /* Hero section styling */
+  /* Hero gradient */
   .hero-gradient {
     background: linear-gradient(180deg, hsl(var(--sky-light)) 0%, hsl(var(--background)) 100%);
   }
 
   .dark .hero-gradient {
     background: linear-gradient(180deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
-  }
-
-  /* Gold accent decorations */
-  .gold-accent {
-    @apply text-accent;
-  }
-
-  /* Scripture quote styling */
-  .scripture-text {
-    @apply text-2xl md:text-3xl font-serif italic leading-relaxed text-foreground/90;
-  }
-
-  /* Devotional text */
-  .devotional-text {
-    @apply text-lg leading-relaxed text-muted-foreground;
-  }
-
-  /* Prayer text styling */
-  .prayer-text {
-    @apply text-base italic leading-relaxed text-foreground/80;
   }
 
   /* Navigation link styling */
@@ -245,41 +176,6 @@
 
   .nav-link-active {
     @apply text-primary font-medium;
-  }
-
-  /* Button variants */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
-  }
-
-  .btn-outline {
-    @apply border border-border bg-transparent hover:bg-secondary/50;
-  }
-
-  /* Share button styling */
-  .share-btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200;
-  }
-
-  .share-btn-whatsapp {
-    @apply bg-[#25D366] text-white hover:bg-[#20BD5A];
-  }
-
-  .share-btn-facebook {
-    @apply bg-[#1877F2] text-white hover:bg-[#166FE5];
-  }
-
-  .share-btn-twitter {
-    @apply bg-[#1DA1F2] text-white hover:bg-[#1A94DA];
-  }
-
-  /* Form styling */
-  .form-input {
-    @apply w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all;
   }
 
   /* Page container */
