@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Logo } from "@/components/Logo";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -20,15 +21,7 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <Sun className="h-7 w-7 text-amber-500 group-hover:text-amber-400 transition-colors duration-200" />
-              <div className="absolute inset-0 bg-amber-400/20 rounded-full blur-sm group-hover:bg-amber-400/30 transition-all duration-200" />
-            </div>
-            <span className="font-serif text-xl font-semibold text-foreground">
-              Light of Day
-            </span>
-          </Link>
+          <Logo />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">

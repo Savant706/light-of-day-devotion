@@ -1,5 +1,6 @@
-import { Sun, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/Logo";
 
 export function Footer() {
   return (
@@ -8,10 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Sun className="h-5 w-5 text-amber-500" />
-              <span className="font-serif text-lg font-semibold">Light of Day Devotion</span>
-            </div>
+            <Logo size="sm" />
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your daily source of spiritual nourishment through God's Word. Begin each day with light, hope, and purpose.
             </p>
