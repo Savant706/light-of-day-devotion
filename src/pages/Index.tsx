@@ -1,25 +1,27 @@
 import { Layout } from "@/components/layout/Layout";
 import { DevotionCard } from "@/components/DevotionCard";
 import { getTodaysDevotion } from "@/data/devotions";
-import { Sun, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { Sun, BookOpen, ArrowRight, Sparkles, Flame } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useDevotionStreak } from "@/hooks/useDevotionStreak";
 
 const todaysDevotion = getTodaysDevotion();
 
 const features = [
   {
-    icon: <Sun className="h-6 w-6 text-amber-500" />,
+    icon: <Sun className="h-6 w-6 text-primary" />,
     title: "Daily Devotions",
     description: "Fresh spiritual nourishment every day of the week, tailored to guide your walk with God.",
   },
   {
-    icon: <BookOpen className="h-6 w-6 text-sky-500" />,
+    icon: <BookOpen className="h-6 w-6 text-sky" />,
     title: "Scripture-Centered",
     description: "Every devotion is rooted in God's Word, helping you meditate on Scripture that transforms.",
   },
   {
-    icon: <Sparkles className="h-6 w-6 text-rose-500" />,
+    icon: <Sparkles className="h-6 w-6 text-destructive" />,
     title: "Prayer Prompts",
     description: "Each devotion includes a guided prayer to help you connect with God in a meaningful way.",
   },
@@ -27,33 +29,51 @@ const features = [
 
 export default function Index() {
   const [visible, setVisible] = useState(false);
+  const { user } = useAuth();
+  const { streak, logDevotion, hasLoggedToday } = useDevotionStreak();
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-log when user reads today's devotion
+  useEffect(() => {
+    if (user && !hasLoggedToday) {
+      logDevotion.mutate();
+    }
+  }, [user, hasLoggedToday]);
+
   return (
     <Layout>
       {/* ── Hero Section ── */}
       <section className="relative overflow-hidden">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-rose-950/20" />
-
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-300/20 dark:bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-rose-300/20 dark:bg-rose-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+        <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent/50 to-background" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-destructive/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 text-center">
           {/* Badge */}
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 dark:bg-white/10 backdrop-blur-sm border border-amber-200/60 dark:border-amber-700/40 text-amber-700 dark:text-amber-300 text-sm font-medium mb-8 shadow-sm transition-all duration-700 ${
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/70 backdrop-blur-sm border border-primary/20 text-primary text-sm font-medium mb-8 shadow-sm transition-all duration-700 ${
               visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
             <Sun className="h-4 w-4" />
             {todaysDevotion.day}'s Devotion is Ready
           </div>
+
+          {/* Streak Display */}
+          {user && streak > 0 && (
+            <div
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-sm font-bold mb-6 shadow-lg shadow-primary/25 transition-all duration-700 delay-50 ${
+                visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              <Flame className="h-4 w-4" />
+              {streak} Day Streak 🔥
+            </div>
+          )}
 
           {/* Headline */}
           <h1
@@ -62,7 +82,7 @@ export default function Index() {
             }`}
           >
             Light of{" "}
-            <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary via-primary to-destructive bg-clip-text text-transparent">
               Day
             </span>{" "}
             Devotion
@@ -86,17 +106,19 @@ export default function Index() {
           >
             <a
               href="#todays-devotion"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-full shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-200 hover:-translate-y-0.5"
             >
               Read Today's Devotion
               <ArrowRight className="h-4 w-4" />
             </a>
-            <Link
-              to="/devotions"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm border border-border/60 text-foreground font-semibold rounded-full hover:bg-white/90 dark:hover:bg-white/20 transition-all duration-200 hover:-translate-y-0.5"
-            >
-              Browse All Devotions
-            </Link>
+            {!user && (
+              <Link
+                to="/auth"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-card/70 backdrop-blur-sm border border-border/60 text-foreground font-semibold rounded-full hover:bg-card/90 transition-all duration-200 hover:-translate-y-0.5"
+              >
+                Sign In to Track Progress
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -137,7 +159,7 @@ export default function Index() {
             {features.map((feature, i) => (
               <div
                 key={i}
-                className="group bg-white/60 dark:bg-white/5 backdrop-blur-sm border border-white/40 dark:border-white/10 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                className="group bg-card/60 backdrop-blur-sm border border-border/30 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-xl bg-secondary/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
                   {feature.icon}
@@ -157,21 +179,20 @@ export default function Index() {
       {/* ── CTA Banner ── */}
       <section className="py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-10 md:p-14 text-center shadow-2xl shadow-amber-500/20">
-            {/* Decorative circles */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/3" />
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-10 md:p-14 text-center shadow-2xl shadow-primary/20">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-foreground/10 rounded-full -translate-y-1/2 translate-x-1/3" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary-foreground/10 rounded-full translate-y-1/2 -translate-x-1/3" />
 
             <div className="relative z-10">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
                 Start Every Morning Right
               </h2>
-              <p className="text-white/80 mb-8 max-w-xl mx-auto text-lg">
+              <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto text-lg">
                 Explore all seven daily devotions and find the one that speaks to your heart today.
               </p>
               <Link
                 to="/devotions"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-amber-600 font-bold rounded-full hover:bg-amber-50 transition-all duration-200 shadow-lg hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primary-foreground text-primary font-bold rounded-full hover:bg-primary-foreground/90 transition-all duration-200 shadow-lg hover:-translate-y-0.5"
               >
                 Explore All Devotions
                 <ArrowRight className="h-4 w-4" />
