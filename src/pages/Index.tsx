@@ -30,6 +30,8 @@ const features = [
 ];
 
 export default function Index() {
+  const { verse: offlineVerse, isOfflineMode } = useOfflineVerse();
+
   const [visible, setVisible] = useState(false);
   const { user } = useAuth();
   const { streak, logDevotion, hasLoggedToday } = useDevotionStreak();
