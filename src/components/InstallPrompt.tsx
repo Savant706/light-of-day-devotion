@@ -15,6 +15,10 @@ function isStandalone(): boolean {
     (navigator as any).standalone === true;
 }
 
+const INSTALL_PROMPT_EVENT = "open-install-prompt";
+const INSTALL_DISMISS_KEY = "install_prompt_dismissed";
+const DISMISS_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+
 export function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
@@ -23,29 +27,42 @@ export function InstallPrompt() {
   useEffect(() => {
     if (isStandalone()) return;
 
-    const wasDismissed = localStorage.getItem("install_prompt_dismissed");
+    const wasDismissed = localStorage.getItem(INSTALL_DISMISS_KEY);
     if (wasDismissed) {
       const dismissedAt = parseInt(wasDismissed, 10);
-      // Show again after 7 days
-      if (Date.now() - dismissedAt < 7 * 24 * 60 * 60 * 1000) {
+      if (Date.now() - dismissedAt < DISMISS_DURATION_MS) {
         setDismissed(true);
-        return;
+      } else {
+        localStorage.removeItem(INSTALL_DISMISS_KEY);
       }
     }
 
-    if (isIOS()) {
-      setShowIOSPrompt(true);
-      return;
-    }
-
-    const handler = (e: Event) => {
+    const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    const handleOpenInstallPrompt = () => {
+      setDismissed(false);
+      localStorage.removeItem(INSTALL_DISMISS_KEY);
+      if (isIOS()) {
+        setShowIOSPrompt(true);
+      }
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener(INSTALL_PROMPT_EVENT, handleOpenInstallPrompt);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener(INSTALL_PROMPT_EVENT, handleOpenInstallPrompt);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isStandalone()) return;
+    setShowIOSPrompt(isIOS() && !dismissed);
+  }, [dismissed]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
@@ -60,7 +77,7 @@ export function InstallPrompt() {
     setDismissed(true);
     setDeferredPrompt(null);
     setShowIOSPrompt(false);
-    localStorage.setItem("install_prompt_dismissed", Date.now().toString());
+    localStorage.setItem(INSTALL_DISMISS_KEY, Date.now().toString());
   };
 
   if (dismissed || isStandalone()) return null;

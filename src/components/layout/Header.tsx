@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LogIn } from "lucide-react";
+import { Menu, X, LogIn, Download } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -18,6 +18,11 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
+
+  const openInstallPrompt = () => {
+    window.dispatchEvent(new Event("open-install-prompt"));
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm">
@@ -44,6 +49,14 @@ export function Header() {
                 )}
               </Link>
             ))}
+            <button
+              onClick={openInstallPrompt}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Install app"
+            >
+              <Download className="h-4 w-4" />
+              Install
+            </button>
             <ThemeToggle />
             {!user ? (
               <Link
@@ -98,6 +111,13 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              <button
+                onClick={openInstallPrompt}
+                className="px-4 py-3 rounded-xl text-left text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors inline-flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Install App
+              </button>
               {!user && (
                 <Link
                   to="/auth"
