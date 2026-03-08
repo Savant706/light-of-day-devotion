@@ -127,6 +127,24 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Today's Verse (offline-capable) ── */}
+      {offlineVerse && (
+        <section className="py-8 md:py-12">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                {isOfflineMode && <WifiOff className="h-3.5 w-3.5" />}
+                Today's Verse
+              </div>
+            </div>
+            <VerseCard
+              reference={offlineVerse.verse_reference}
+              text={offlineVerse.verse_text}
+            />
+          </div>
+        </section>
+      )}
+
       {/* ── Today's Devotion ── */}
       <section id="todays-devotion" className="py-16 md:py-24">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
