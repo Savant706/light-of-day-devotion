@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -7,17 +9,22 @@ const corsHeaders = {
 interface RequestBody {
   verseText: string;
   verseReference: string;
-  format: "whatsapp-status" | "instagram-post" | "instagram-story";
-  style: "sunrise" | "mountains" | "light-rays" | "sky" | "gradient";
+  format: string;
+  style: string;
 }
 
-const formatDimensions = {
+const VALID_FORMATS = ["whatsapp-status", "instagram-post", "instagram-story"] as const;
+const VALID_STYLES = ["sunrise", "mountains", "light-rays", "sky", "gradient"] as const;
+const MAX_VERSE_LEN = 500;
+const MAX_REF_LEN = 100;
+
+const formatDimensions: Record<string, { width: number; height: number; ratio: string }> = {
   "whatsapp-status": { width: 1080, height: 1920, ratio: "9:16" },
   "instagram-post": { width: 1080, height: 1080, ratio: "1:1" },
   "instagram-story": { width: 1080, height: 1920, ratio: "9:16" },
 };
 
-const styleDescriptions = {
+const styleDescriptions: Record<string, string> = {
   sunrise: "a breathtaking golden sunrise over calm waters with soft clouds, warm orange and pink tones, peaceful and spiritual atmosphere",
   mountains: "majestic snow-capped mountains at dawn with soft mist in valleys, purple and blue hues, serene and awe-inspiring landscape",
   "light-rays": "divine golden light rays streaming through clouds from heaven, ethereal and holy atmosphere, soft bokeh effect",
@@ -31,16 +38,53 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!lovableApiKey) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
+    // Authenticate the caller
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Parse and validate input
     const { verseText, verseReference, format, style }: RequestBody = await req.json();
 
     if (!verseText || !verseReference || !format) {
       return new Response(
         JSON.stringify({ error: "Missing required fields: verseText, verseReference, format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (
+      typeof verseText !== "string" || verseText.length > MAX_VERSE_LEN ||
+      typeof verseReference !== "string" || verseReference.length > MAX_REF_LEN ||
+      !VALID_FORMATS.includes(format as any) ||
+      (style && !VALID_STYLES.includes(style as any))
+    ) {
+      return new Response(
+        JSON.stringify({ error: "Invalid input: check field lengths and allowed values" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -134,7 +178,7 @@ The image should inspire and uplift viewers while making the Bible verse the foc
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Error generating verse image:", error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: "An internal error occurred" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
