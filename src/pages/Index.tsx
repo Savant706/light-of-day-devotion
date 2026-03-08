@@ -1,11 +1,13 @@
 import { Layout } from "@/components/layout/Layout";
 import { DevotionCard } from "@/components/DevotionCard";
 import { getTodaysDevotion } from "@/data/devotions";
-import { Sun, BookOpen, ArrowRight, Sparkles, Flame } from "lucide-react";
+import { Sun, BookOpen, ArrowRight, Sparkles, Flame, WifiOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDevotionStreak } from "@/hooks/useDevotionStreak";
+import { useOfflineVerse } from "@/hooks/useOfflineVerse";
+import { VerseCard } from "@/components/VerseCard";
 
 const todaysDevotion = getTodaysDevotion();
 
@@ -28,6 +30,8 @@ const features = [
 ];
 
 export default function Index() {
+  const { verse: offlineVerse, isOfflineMode } = useOfflineVerse();
+
   const [visible, setVisible] = useState(false);
   const { user } = useAuth();
   const { streak, logDevotion, hasLoggedToday } = useDevotionStreak();
@@ -122,6 +126,29 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* ── Today's Verse (offline-capable) ── */}
+      {offlineVerse && (
+        <section className="py-8 md:py-12">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                {isOfflineMode && <WifiOff className="h-3.5 w-3.5" />}
+                Today's Verse
+              </div>
+            </div>
+            <VerseCard
+              date={offlineVerse.date}
+              verseReference={offlineVerse.verse_reference}
+              verseText={offlineVerse.verse_text}
+              devotional={offlineVerse.devotional}
+              prayer={offlineVerse.prayer}
+              isOffline={isOfflineMode}
+              compact
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── Today's Devotion ── */}
       <section id="todays-devotion" className="py-16 md:py-24">
