@@ -1,11 +1,13 @@
 import { Layout } from "@/components/layout/Layout";
 import { DevotionCard } from "@/components/DevotionCard";
 import { getTodaysDevotion } from "@/data/devotions";
-import { Sun, BookOpen, ArrowRight, Sparkles, Flame } from "lucide-react";
+import { Sun, BookOpen, ArrowRight, Sparkles, Flame, WifiOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDevotionStreak } from "@/hooks/useDevotionStreak";
+import { useOfflineVerse } from "@/hooks/useOfflineVerse";
+import { VerseCard } from "@/components/VerseCard";
 
 const todaysDevotion = getTodaysDevotion();
 

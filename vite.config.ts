@@ -20,14 +20,33 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}"],
         navigateFallbackDenylist: [/^\/~oauth/],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/hybqkpvkqiwlomwufiax\.supabase\.co\/.*/i,
+            urlPattern: /^https:\/\/hybqkpvkqiwlomwufiax\.supabase\.co\/rest\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "supabase-api-cache",
-              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 },
+              expiration: { maxEntries: 100, maxAgeSeconds: 24 * 60 * 60 },
               networkTimeoutSeconds: 5,
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/hybqkpvkqiwlomwufiax\.supabase\.co\/storage\/.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "supabase-storage-cache",
+              expiration: { maxEntries: 200, maxAgeSeconds: 7 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /\.(woff2?|ttf|otf|eot)$/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "font-cache",
+              expiration: { maxEntries: 20, maxAgeSeconds: 30 * 24 * 60 * 60 },
             },
           },
         ],
