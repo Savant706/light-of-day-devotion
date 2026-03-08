@@ -138,8 +138,13 @@ export default function Index() {
               </div>
             </div>
             <VerseCard
-              reference={offlineVerse.verse_reference}
-              text={offlineVerse.verse_text}
+              date={offlineVerse.date}
+              verseReference={offlineVerse.verse_reference}
+              verseText={offlineVerse.verse_text}
+              devotional={offlineVerse.devotional}
+              prayer={offlineVerse.prayer}
+              isOffline={isOfflineMode}
+              compact
             />
           </div>
         </section>
