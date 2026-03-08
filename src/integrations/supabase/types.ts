@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookmarks: {
+        Row: {
+          created_at: string
+          devotion_day: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          devotion_day: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          devotion_day?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_verses: {
         Row: {
           created_at: string
@@ -47,6 +68,27 @@ export type Database = {
         }
         Relationships: []
       }
+      devotion_logs: {
+        Row: {
+          created_at: string
+          devotion_date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          devotion_date?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          devotion_date?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       prayer_requests: {
         Row: {
           created_at: string
@@ -71,6 +113,60 @@ export type Database = {
           is_anonymous?: boolean | null
           name?: string
           prayer_request?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          font_size: string
+          id: string
+          notifications_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          font_size?: string
+          id: string
+          notifications_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          font_size?: string
+          id?: string
+          notifications_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_scores: {
+        Row: {
+          created_at: string
+          id: string
+          score: number
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          score: number
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          score?: number
+          total_questions?: number
+          user_id?: string
         }
         Relationships: []
       }

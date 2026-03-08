@@ -1,30 +1,32 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Logo } from "@/components/Logo";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/devotions", label: "Devotions" },
+  { to: "/prayer", label: "Prayer" },
+  { to: "/quiz", label: "Quiz" },
   { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Logo />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -32,20 +34,36 @@ export function Header() {
                 className={cn(
                   "text-sm font-medium transition-all duration-200 relative py-1",
                   location.pathname === link.to
-                    ? "text-amber-600 dark:text-amber-400"
+                    ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {link.label}
                 {location.pathname === link.to && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
                 )}
               </Link>
             ))}
             <ThemeToggle />
+            {!user ? (
+              <Link
+                to="/auth"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 transition-colors"
+              >
+                <LogIn className="h-3.5 w-3.5" />
+                Sign In
+              </Link>
+            ) : (
+              <Link
+                to="/profile"
+                className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground text-xs font-bold"
+              >
+                {user.email?.charAt(0).toUpperCase()}
+              </Link>
+            )}
           </nav>
 
-          {/* Mobile: Theme Toggle + Hamburger */}
+          {/* Mobile */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
             <button
@@ -62,9 +80,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
+          <nav className="md:hidden py-4 border-t border-border/50">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -74,13 +91,22 @@ export function Header() {
                   className={cn(
                     "px-4 py-3 rounded-xl text-sm font-medium transition-colors",
                     location.pathname === link.to
-                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   {link.label}
                 </Link>
               ))}
+              {!user && (
+                <Link
+                  to="/auth"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-xl text-sm font-medium text-primary"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </nav>
         )}
