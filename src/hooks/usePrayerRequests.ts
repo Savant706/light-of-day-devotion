@@ -13,9 +13,15 @@ export function useSubmitPrayerRequest() {
   
   return useMutation({
     mutationFn: async (request: PrayerRequestInput) => {
+      // Get the current user (optional — anonymous submissions allowed)
+      const { data: { user } } = await supabase.auth.getUser();
+
       const { data, error } = await supabase
         .from("prayer_requests")
-        .insert(request)
+        .insert({
+          ...request,
+          user_id: user?.id ?? null,
+        })
         .select()
         .single();
 
