@@ -1,33 +1,120 @@
-import { useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useDevotionStreak } from "@/hooks/useDevotionStreak";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { supabase } from "@/integrations/supabase/client";
 import {
-  Flame, BookOpen, Bookmark, Trophy, LogOut, Settings, Calendar,
-  ChevronRight, Sun
+  Flame, BookOpen, Bookmark, LogOut, Settings, Calendar,
+  ChevronRight, Sun, Loader2, AlertCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+
+interface ProfileData {
+  display_name: string | null;
+  avatar_url: string | null;
+}
 
 export default function Profile() {
-  const { user, loading, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { user, loading: authLoading, signOut } = useAuth();
   const { streak, totalDevotions, completedDates } = useDevotionStreak();
   const { bookmarks } = useBookmarks();
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && !user) navigate("/auth");
-  }, [user, loading, navigate]);
+    if (authLoading || !user) {
+      setProfileLoading(false);
+      return;
+    }
 
-  if (loading || !user) return null;
+    const fetchProfile = async () => {
+      setProfileLoading(true);
+      setProfileError(null);
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        setProfileError("Failed to load profile. Please try again.");
+      } else {
+        setProfile(data);
+      }
+      setProfileLoading(false);
+    };
+
+    fetchProfile();
+  }, [user, authLoading]);
+
+  if (authLoading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Layout>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
+          <Sun className="h-12 w-12 text-muted-foreground" />
+          <h1 className="font-serif text-2xl font-bold text-foreground">Please log in</h1>
+          <p className="text-muted-foreground text-sm">Sign in to view your profile and track your progress.</p>
+          <Link
+            to="/auth"
+            className="px-6 py-2.5 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            Sign In
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (profileLoading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (profileError) {
+    return (
+      <Layout>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
+          <AlertCircle className="h-12 w-12 text-destructive" />
+          <h1 className="font-serif text-xl font-bold text-foreground">Something went wrong</h1>
+          <p className="text-muted-foreground text-sm">{profileError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2.5 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </Layout>
+    );
+  }
+
+  const displayName = profile?.display_name || user.email?.split("@")[0] || "User";
+  const avatarUrl = profile?.avatar_url;
 
   const handleSignOut = async () => {
     await signOut();
     toast.success("Signed out successfully");
-    navigate("/");
   };
 
   const stats = [
@@ -36,7 +123,6 @@ export default function Profile() {
     { icon: Bookmark, label: "Saved", value: bookmarks.length, color: "text-primary" },
   ];
 
-  // Calendar for current month
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -52,11 +138,16 @@ export default function Profile() {
         <div className="max-w-lg mx-auto space-y-6">
           {/* Profile Header */}
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
-              <Sun className="h-10 w-10 text-white" />
-            </div>
+            <Avatar className="w-20 h-20 mx-auto mb-4 shadow-lg">
+              {avatarUrl ? (
+                <AvatarImage src={avatarUrl} alt={displayName} />
+              ) : null}
+              <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-2xl font-bold">
+                {displayName.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <h1 className="font-serif text-2xl font-bold text-foreground">
-              {user.email?.split("@")[0]}
+              {displayName}
             </h1>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
